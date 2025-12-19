@@ -1,0 +1,35 @@
+dataset:
+  input_dir: "./data/test/images"
+  menu_json: "./config/menu.json"
+  colormap_csv: "./config/colormap.csv"
+  gt_dir: "./data/test/masks"
+  results_dir: "./results/"
+
+models:
+  pe:
+    config: "PE-Core-L14-336"
+  segmentation:
+    sam_cfg: "configs/sam2.1/sam2.1_hiera_l.yaml"
+    sam_ckpt: "checkpoints/sam2.1_hiera_large.pt"
+    gdino_cfg: "groundingdino/config/GroundingDINO_SwinB_cfg.py"
+    gdino_ckpt: "checkpoints/groundingdino_swinb_cogcoor.pth"
+
+similarity:
+  type: "cosine"
+  threshold: 0.6
+  num_patches: 20
+  patch_size: 112
+  knn_k: 5 
+
+evaluation:
+  metrics: ["mIoU", "pixel_acc", "instance_acc"]
+  threshold: 0.5
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+
+embeddings:
+  use_mean: false
+  directory: "./prototypes"
+  model: "PE-Core-L14-336"

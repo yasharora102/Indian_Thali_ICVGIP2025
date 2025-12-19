@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Thali Nutrition Scanner — Live</title>
+<style>
+  :root{
+    --bg:#0f1115; --bg2:#151821; --panel:#1b2030; --muted:#8aa0c0;
+    --text:#e8eefc; --accent:#7cc4ff; --ok:#9be29b; --err:#ff9b9b; --border:#2a344a;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--text)}
+
+  header{position:sticky; top:0; z-index:5; padding:16px 22px; border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(21,24,33,.9), rgba(21,24,33,.7))}
+  header h1{margin:0; font-size:18px}
+
+  .container{padding:18px 22px; display:grid; grid-template-columns: 360px 1fr; gap:18px}
+  @media (max-width:1100px){ .container{grid-template-columns:1fr} }
+
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
+  .card h3{margin:0; padding:12px 14px; font-size:14px; color:#cfe2ff; border-bottom:1px solid var(--border)}
+  .card .body{padding:14px}
+
+  .row{display:flex; gap:10px; align-items:center; margin:8px 0}
+  .row label{width:120px; font-size:12px; color:var(--muted)}
+  .row input, .row select{flex:1; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:var(--bg2); color:var(--text)}
+  .uploader input[type=file]{width:100%}
+
+  .btn{display:inline-flex; gap:8px; align-items:center; padding:10px 14px; border-radius:10px; border:1px solid var(--border); cursor:pointer;
+       background:linear-gradient(180deg,#22314c,#1b2540); color:var(--text); font-weight:600}
+  .btn[disabled]{opacity:.6; cursor:not-allowed}
+  .btn.secondary{background:transparent}
+
+  .stage{margin-top:8px; font-size:13px; background:var(--bg2); border:1px solid var(--border); padding:10px 12px; border-radius:10px}
+  .pill{display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid var(--border); font-size:12px; background:#182033}
+  .pill.ok{background:#102214; color:var(--ok)}
+  .pill.err{background:#261214; color:var(--err)}
+
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  @media (max-width:1400px){ .grid-3{grid-template-columns:1fr 1fr} }
+  @media (max-width:900px){ .grid-3{grid-template-columns:1fr} }
+
+  .img-wrap{background:#0c0f16; border:1px dashed var(--border); border-radius:10px; overflow:hidden}
+  .img-wrap img{width:100%; display:block}
+
+  .table-wrap{max-height:380px; overflow:auto; border:1px solid var(--border); border-radius:10px}
+  table{width:100%; border-collapse:separate; border-spacing:0}
+  thead th{position:sticky; top:0; background:var(--panel); border-bottom:1px solid var(--border); font-size:12px; padding:10px 8px; color:#cfe2ff; text-align:left}
+  tbody td{font-size:13px; padding:8px; border-bottom:1px solid var(--border); color:#e6ecff}
+  tbody tr:hover{background:rgba(124,196,255,.05)}
+  .num{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; text-align:right}
+
+  .totals{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:10px}
+  .totals .item{background:var(--bg2); border:1px solid var(--border); padding:10px; border-radius:10px}
+  .totals .label{font-size:12px; color:var(--muted)}
+  .totals .value{font-size:16px; font-weight:700}
+</style>
+</head>
+<body>
+<header><h1>🍽️ Thali Nutrition Scanner — Live</h1></header>
+
+<div class="container">
+  <!-- Controls -->
+  <div class="card">
+    <h3>Upload & Settings</h3>
+    <div class="body">
+      <div class="uploader">
+        <input id="file" type="file" accept="image/*" />
+        <div style="margin-top:6px; font-size:12px; color:var(--muted)">Upload a plate photo (resized to 1024×1024)</div>
+      </div>
+
+      <div class="row"><label>kNN (k)</label><input id="knn_k" type="number" min="1" max="10" value="3"></div>
+      <div class="row"><label>Patches / Mask</label><input id="ppm" type="number" min="3" max="50" value="10"></div>
+      <div class="row">
+        <label>Pooling</label>
+        <select id="pooling">
+          <option value="both" selected>both (prefer pooled)</option>
+          <option value="pooled">pooled</option>
+          <option value="majority">majority</option>
+        </select>
+      </div>
+      <div class="row"><label>Conf. Threshold</label><input id="conf" type="number" step="0.01" value="0.00"></div>
+      <div class="row">
+        <label>Mean Prototypes</label>
+        <select id="mean">
+          <option value="1" selected>use_mean=True</option>
+          <option value="0">use_mean=False</option>
+        </select>
+      </div>
+
+      <div class="row" style="gap:10px; margin-top:12px">
+        <button class="btn" id="runBtn">▶ Run (streaming)</button>
+        <button class="btn secondary" id="resetBtn">⟲ Reset</button>
+      </div>
+
+      <div class="stage" id="stage"><b>Idle.</b> Choose an image and click Run.</div>
+      <div style="margin-top:8px; font-size:12px; color:var(--muted)">Events: segmentation → classification (index mask) → weight → overlay/CSV → done.</div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div style="display:flex; flex-direction:column; gap:18px">
+    <div class="grid-3">
+      <div class="card">
+        <h3>Original</h3>
+        <div class="body img-wrap"><img id="imgOriginal" alt="original"></div>
+      </div>
+      <div class="card">
+        <h3>Index Mask (labelIds)</h3>
+        <div class="body img-wrap"><img id="imgIndexMask" alt="index mask"></div>
+      </div>
+      <div class="card">
+        <h3>Overlay</h3>
+        <div class="body img-wrap"><img id="imgOverlay" alt="overlay"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Per‑ROI Predictions</h3>
+      <div class="body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>Class</th><th>Conf</th>
+                <th class="num">Weight (g)</th><th class="num">Calories</th>
+                <th class="num">Carbs (g)</th><th class="num">Protein (g)</th><th class="num">Fat (g)</th>
+                <th class="num">Area (px)</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div class="totals" id="totals">
+          <div class="item"><div class="label">Weight</div><div class="value" id="tWeight">0.0 g</div></div>
+          <div class="item"><div class="label">Calories</div><div class="value" id="tCal">0.0</div></div>
+          <div class="item"><div class="label">Carbs</div><div class="value" id="tCarb">0.0 g</div></div>
+          <div class="item"><div class="label">Protein</div><div class="value" id="tProt">0.0 g</div></div>
+          <div class="item"><div class="label">Fat</div><div class="value" id="tFat">0.0 g</div></div>
+        </div>
+        <div style="margin-top:12px; display:flex; align-items:center; gap:12px">
+          <span id="maskCount" class="pill">0 masks</span>
+          <a id="csvLink" href="#" download style="display:none">⬇ Download CSV</a>
+          <span id="statusPill" class="pill ok" style="display:none">done</span>
+          <span id="errPill" class="pill err" style="display:none">error</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- helper for sub-path deployments ---
+  function apiUrl(path){
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    const idx = parts.lastIndexOf("static");
+    const base = idx >= 0 ? "/" + parts.slice(0, idx).join("/") : "";
+    return base + path;
+  }
+
+  const el = (id)=>document.getElementById(id);
+  const $runBtn = el("runBtn"), $resetBtn = el("resetBtn"), $stage = el("stage");
+  const $imgOriginal = el("imgOriginal"), $imgIndexMask = el("imgIndexMask"), $imgOverlay = el("imgOverlay");
+  const $rows = el("rows"), $csvLink = el("csvLink"), $maskCount = el("maskCount"), $statusPill = el("statusPill"), $errPill = el("errPill");
+  const format = (x,d=1)=>Number(x??0).toFixed(d);
+  const setStage = (t)=>{ $stage.innerHTML = `<b>${t}</b>`; };
+  const showOriginal = (u)=>{ $imgOriginal.src = u; };
+  const showIndexMask = (u)=>{ $imgIndexMask.src = u + "?t=" + Date.now(); }; // cache-bust
+  const showOverlay = (u)=>{ $imgOverlay.src = u + "?t=" + Date.now(); };
+  const setCsvLink = (u)=>{ $csvLink.href = u; $csvLink.style.display='inline'; };
+  const updateMaskCount = (n)=>{ $maskCount.textContent = `${n} mask${n===1?'':'s'}`; };
+
+  function clearRows(){ $rows.innerHTML=""; }
+  function appendClassRow(mask_id, class_name, conf){
+    const id = `row-${mask_id}`;
+    let tr = document.getElementById(id);
+    if(!tr){
+      tr = document.createElement("tr");
+      tr.id = id;
+      tr.innerHTML = `
+        <td class="num">${mask_id}</td><td class="cls"></td><td class="num conf"></td>
+        <td class="num w"></td><td class="num cal"></td><td class="num carb"></td>
+        <td class="num prot"></td><td class="num fat"></td><td class="num area"></td>`;
+      $rows.appendChild(tr);
+    }
+    tr.querySelector(".cls").textContent = class_name;
+    tr.querySelector(".conf").textContent = format(conf,2);
+  }
+  function appendWeightRow(row){
+    const id = `row-${row.mask_id}`;
+    let tr = document.getElementById(id);
+    if(!tr){
+      tr = document.createElement("tr");
+      tr.id = id;
+      tr.innerHTML = `
+        <td class="num">${row.mask_id}</td><td class="cls">${row.class_name}</td><td class="num conf">${format(row.confidence,2)}</td>
+        <td class="num w"></td><td class="num cal"></td><td class="num carb"></td>
+        <td class="num prot"></td><td class="num fat"></td><td class="num area"></td>`;
+      $rows.appendChild(tr);
+    }
+    tr.querySelector(".w").textContent = format(row.weight_g,1);
+    tr.querySelector(".cal").textContent = format(row.calories,1);
+    tr.querySelector(".carb").textContent = format(row.carbs,1);
+    tr.querySelector(".prot").textContent = format(row.protein,1);
+    tr.querySelector(".fat").textContent = format(row.fat,1);
+    tr.querySelector(".area").textContent = row.area_px;
+  }
+  function updateTotals(t){
+    el("tWeight").textContent = `${format(t.weight_g,1)} g`;
+    el("tCal").textContent = format(t.calories,1);
+    el("tCarb").textContent = `${format(t.carbs,1)} g`;
+    el("tProt").textContent = `${format(t.protein,1)} g`;
+    el("tFat").textContent = `${format(t.fat,1)} g`;
+  }
+  function setDone(){ $statusPill.style.display='inline'; $errPill.style.display='none'; }
+  function setError(msg){ $errPill.textContent = `error: ${msg}`; $errPill.style.display='inline'; $statusPill.style.display='none'; }
+  function disableRun(b){ $runBtn.disabled = b; }
+  function resetUI(){
+    setStage("Idle. Choose an image and click Run.");
+    $imgOriginal.src = ""; $imgIndexMask.src = ""; $imgOverlay.src = "";
+    $csvLink.style.display='none'; $statusPill.style.display='none'; $errPill.style.display='none';
+    updateMaskCount(0); clearRows(); updateTotals({weight_g:0,calories:0,carbs:0,protein:0,fat:0});
+  }
+  $resetBtn.addEventListener("click", resetUI);
+
+  async function runStreaming(){
+    try{
+      disableRun(true); $statusPill.style.display='none'; $errPill.style.display='none';
+      setStage("Uploading image…");
+      const f = el("file").files[0];
+      if(!f){ setStage("Please choose an image."); disableRun(false); return; }
+
+      // 1) upload
+      const fd = new FormData(); fd.append("file", f);
+      const start = await fetch(apiUrl("/api/start"), {method:"POST", body:fd}).then(r=>r.json());
+      showOriginal(start.original_url);
+
+      // 2) stream
+      const qs = new URLSearchParams({
+        knn_k:String(el("knn_k").value||3),
+        patches_per_mask:String(el("ppm").value||10),
+        pooling:el("pooling").value||"both",
+        conf_thresh:String(el("conf").value||0),
+        use_mean_protos:String(el("mean").value||1)
+      }).toString();
+
+      clearRows(); updateTotals({weight_g:0,calories:0,carbs:0,protein:0,fat:0});
+      setStage("Starting pipeline…");
+      const es = new EventSource(apiUrl(`/api/stream/${start.run_id}?${qs}`));
+
+      es.addEventListener("stage", (e)=> {
+        const {message, name} = JSON.parse(e.data); setStage(message||name);
+      });
+
+      es.addEventListener("segmentation", (e)=> {
+        const {n_masks} = JSON.parse(e.data); updateMaskCount(n_masks);
+      });
+
+      // NEW: index-based mask preview
+      es.addEventListener("index_mask", (e)=> {
+        const {mask_url} = JSON.parse(e.data);
+        if(mask_url) showIndexMask(mask_url);
+      });
+
+      es.addEventListener("classification", (e)=> {
+        const d = JSON.parse(e.data);
+        appendClassRow(d.mask_id, d.class_name, d.confidence);
+      });
+
+      es.addEventListener("weight", (e)=> {
+        const {row, totals} = JSON.parse(e.data);
+        if(row) appendWeightRow(row);
+        if(totals) updateTotals(totals);
+      });
+
+      es.addEventListener("overlay", (e)=> {
+        const {overlay_url, csv_url} = JSON.parse(e.data);
+        if(overlay_url) showOverlay(overlay_url);
+        if(csv_url) setCsvLink(csv_url);
+      });
+
+      es.addEventListener("done", (e)=> {
+        const p = JSON.parse(e.data);
+        if(p.overlay_url) showOverlay(p.overlay_url);
+        if(p.csv_url) setCsvLink(p.csv_url);
+        updateTotals(p.totals||{});
+        setStage("Done."); setDone(); es.close(); disableRun(false);
+      });
+
+      es.addEventListener("error", (e)=> {
+        try{ const {message}=JSON.parse(e.data); setError(message||"stream error"); }catch{}
+        setStage("Error."); es.close(); disableRun(false);
+      });
+
+    }catch(err){
+      console.error(err); setError(err.message||String(err)); setStage("Error."); disableRun(false);
+    }
+  }
+  el("runBtn").addEventListener("click", runStreaming);
+</script>
+</body>
+</html>
