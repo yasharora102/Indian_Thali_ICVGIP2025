@@ -3,17 +3,19 @@
 
 # Indian Thali: A Dataset and Benchmark for Food Segmentation and Weight Estimation
 
-[![Paper](https://img.shields.io/badge/Paper-ICVGIP_2025-green)](https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali)
+[![Paper](https://img.shields.io/badge/Paper-ICVGIP_2025-green)](https://drive.google.com/file/d/1UpYiVOng2okzTeanZ2ds1G7EpEnONfb_/view?usp=sharing)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Framework](https://img.shields.io/badge/PyTorch-2.6-red.svg)](https://pytorch.org/)
 [![Dataset](https://img.shields.io/badge/Dataset-ITD_%26_WED-yellow)](https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali)
 
-**Yash Arora***, [Author 2], [Author 3], [Author 4]
+**Yash Arora**, **S L P Yaswanth**, **Tanishq Maheshwari**, **Anupam Sobti**, **C. V. Jawahar**
+
+**International Institute of Information Technology, Hyderabad (IIIT-H)**
 
 **Abstract**
 *We present the **Indian Thali Dataset (ITD)** and **Weight Estimation Dataset (WED)**, targeting the complex challenge of segmenting and estimating the weight of Indian food items. Unlike western meals, Indian thalis allow items to touch and overlap, presenting unique segmentation challenges. We also introduce a novel multi-modal weight estimation network that fuses RGB and depth features to achieve state-of-the-art results.*
 
-[**Webpage**](https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali) | [**Paper**](#) | [**Video**](#)
+[**Webpage**](https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali) | [**Paper**](https://drive.google.com/file/d/1UpYiVOng2okzTeanZ2ds1G7EpEnONfb_/view?usp=sharing)
 
 </div>
 
@@ -44,8 +46,8 @@ This repository is organized into three main components:
 Clone the repository and install the dependencies. We recommend using a Conda environment.
 
 ```bash
-git clone https://github.com/yasharora102/Indian_Thali.git
-cd Indian_Thali
+git clone https://github.com/yasharora102/Indian_Thali_ICVGIP2025.git
+cd Indian_Thali_ICVGIP2025
 
 # Create a generic env (optional but recommended)
 conda create -n thali_env python=3.10 -y
@@ -125,19 +127,19 @@ We provide pre-trained checkpoints for our best performing models.
 
 | Model | Task | Backbone | metrics | Link |
 | :--- | :--- | :--- | :--- | :--- |
-| **Mask2Former** | Segmentation | Swin-L | 58.2 mIoU | [Download](#) |
-| **WeightNet** | Weight Est. | ResNet-50 | N/A | [Download](#) |
+| **Mask2Former** | Segmentation | Swin-L | 58.2 mIoU | Coming Soon |
+| **WeightNet** | Weight Est. | ResNet-50 | N/A | Coming Soon |
 
 ---
 
 ## 🖊️ Citation
 
-If you find this code or dataset useful, please cite our work:
+If you find this code or dataset useful, please cite our paper:
 
 ```bibtex
-@inproceedings{icvgip2025_indian_thali,
+@inproceedings{arora2025indian,
   title={Indian Thali: A Dataset and Benchmark for Food Segmentation and Weight Estimation},
-  author={Arora, Yash and ...},
+  author={Arora, Yash and Yaswanth, S L P and Maheshwari, Tanishq and Sobti, Anupam and Jawahar, C V},
   booktitle={Proceedings of the Indian Conference on Computer Vision, Graphics and Image Processing (ICVGIP)},
   year={2025}
 }
