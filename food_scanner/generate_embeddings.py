@@ -219,7 +219,7 @@ def precompute_embeddings(
 
 if __name__ == "__main__":
     # IMPORTANT: Set the path to your dataset's prototype directory
-    # PROTO_DIR = "/home/nutrition/code/yash/food-classify/seg_full_segFULL_new_patches" 
+    # PROTO_DIR = "./prototypes" 
     PROTO_DIR = os.getenv("PROTO_DIR", "./prototypes") 
     print(f"📂 Using prototype directory: {PROTO_DIR}")
     precompute_embeddings(PROTO_DIR)

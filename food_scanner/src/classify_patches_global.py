@@ -275,7 +275,7 @@
 #     parser.add_argument('--orig_images_dir', required=True)
 #     parser.add_argument('--output_dir',      required=True)
 #     parser.add_argument('--prototype_dir',   required=True, help='Global dir with ClassName subfolders')
-#     parser.add_argument('--menu_json',       default='/home/nutrition/WED_menu.json', help='JSON mapping date→[classes]')
+#     parser.add_argument('--menu_json',       default='./config/menu.json', help='JSON mapping date→[classes]')
 #     parser.add_argument('--knn_k',           type=int, default=3, choices=[1,3,4,5])
 #     parser.add_argument('--pooling',         choices=['majority','pooled','both'], default='both')
 #     parser.add_argument('--conf_threshold',  type=float, default=0.0)

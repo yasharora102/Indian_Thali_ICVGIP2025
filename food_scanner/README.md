@@ -11,7 +11,7 @@ To use your own custom data with the Food Scanner, follow these steps:
 Put all prototypes as the following structure:
 ```bash
 
-/home/nutrition/weight-est/proto_final
+./data/prototypes
 ├── 20250512
 │   ├── beetroot-poriyal
 │   │   ├── beetroot-poriyal_1.jpg

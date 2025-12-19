@@ -460,7 +460,7 @@ if __name__ == '__main__':
 
 
 # python eval_blob_indexbased.py \
-#     --parent_dir /home/nutrition/code/yash/food-classify/modular_pipeline_fastapi/results/multiscale_seg_v1_RERUN \
-#         --gt_dir /home/nutrition/seg_v1/test/masks \
+#     --parent_dir ./results/multiscale_seg_v1_RERUN \
+#         --gt_dir ./data/test/masks \
 #             --output_dir results/seg_v1_results \
 #                 --min_area 2200 --iou_threshold 0.6 --cmap OrRd --workers 4
