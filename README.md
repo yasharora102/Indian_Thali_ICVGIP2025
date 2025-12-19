@@ -34,7 +34,7 @@ This repository is organized into three main components:
 | Component | Description |
 | :--- | :--- |
 | **`segmentation/`** | Training and evaluation scripts for food segmentation (Mask2Former, SegFormer, etc.) on ITD. |
-| **`weight_estimation/`** | Our proposed weight estimation pipeline fusing RGB and Depth cues. |
+| **`weight_estimation/`** | Our proposed weight estimation pipeline. |
 | **`food_scanner/`** | A real-time prototype application (FastAPI) demonstrating the full pipeline. |
 
 ---
@@ -70,19 +70,7 @@ mim install mmsegmentation
 Please download the datasets from our [project webpage](https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali).
 
 - **Indian Thali Dataset (ITD)**: Contains 7,900 annotated images.
-- **Weight Estimation Dataset (WED)**: Contains ~1,400 RGB-D image pairs with ground truth weights.
-
-Structure your data directory as follows:
-```text
-data/
-├── ITD/
-│   ├── images/
-│   └── annotations/
-└── WED/
-    ├── rgb/
-    ├── depth/
-    └── weights.json
-```
+- **Weight Estimation Dataset (WED)**: Contains ~1,400 annotated images with ground truth weights.
 
 ---
 
