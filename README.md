@@ -1,4 +1,3 @@
-
 <div align="center">
 
 # What is there in an Indian Thali?
@@ -11,9 +10,14 @@
 **Yash Arora**, **Aditya Arun**, **C. V. Jawahar**
 
 **International Institute of Information Technology, Hyderabad (IIIT-H)**
-
+</div>
+<div align="justify">
+  
 **Abstract**
-*Automated dietary monitoring solutions face significant challenges when dealing with culturally diverse, multi-dish meals, where traditional single-item recognition approaches fail to capture the complexity of real-world eating patterns. Most existing computer vision systems are tailored to western foods and struggle with the overlapping textures, varied presentations, and cultural specificity of dishes like Indian Thalis, which contain 5–10 distinct food items per plate. We present Food Scanner, a novel, end-to-end pipeline with retraining-free segmentation & prototype-based classification, plus a lightweight trainable weight-regression head for automated nutrition estimation of multi-dish meals from a single image. Our approach requires no class-specific segmentation or classification retraining, enabling rapid adaptation to new dishes and cuisines. The pipeline integrates zero-shot segmentation, embedding-based prototype classification, a lightweight weight regression head, and nutrition computation to transform an Indian thali into per-dish calorie and macronutrient breakdowns. To enable this study, we contribute two datasets: a multi-view Indian Thali dataset of 796 plates (7,900 images) covering 50 dishes (with dense plate-level masks), and a weight estimation dataset of 267 plates (1,394 images) covering 41 dishes (with gram-level weight annotations). Systematic ablation studies show that our method achieves high accuracy while maintaining real-time performance. By combining zero-shot capabilities with a modular design, Food Scanner offers a scalable, culturally adaptable solution that can be deployed across diverse food environments without any additional training. The code will be available here.*
+
+Automated dietary monitoring solutions face significant challenges when dealing with culturally diverse, multi-dish meals, where traditional single-item recognition approaches fail to capture the complexity of real-world eating patterns. Most existing computer vision systems are tailored to western foods and struggle with the overlapping textures, varied presentations, and cultural specificity of dishes like Indian Thalis, which contain 5–10 distinct food items per plate. We present Food Scanner, a novel, end-to-end pipeline with retraining-free segmentation & prototype-based classification, plus a lightweight trainable weight-regression head for automated nutrition estimation of multi-dish meals from a single image. Our approach requires no class-specific segmentation or classification retraining, enabling rapid adaptation to new dishes and cuisines. The pipeline integrates zero-shot segmentation, embedding-based prototype classification, a lightweight weight regression head, and nutrition computation to transform an Indian thali into per-dish calorie and macronutrient breakdowns. To enable this study, we contribute two datasets: a multi-view Indian Thali dataset of 796 plates (7,900 images) covering 50 dishes (with dense plate-level masks), and a weight estimation dataset of 267 plates (1,394 images) covering 41 dishes (with gram-level weight annotations). Systematic ablation studies show that our method achieves high accuracy while maintaining real-time performance. By combining zero-shot capabilities with a modular design, Food Scanner offers a scalable, culturally adaptable solution that can be deployed across diverse food environments without any additional training.
+</div>
+<div align="center">
 
 [**Webpage**](https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali) | [**Paper**](https://drive.google.com/file/d/1UpYiVOng2okzTeanZ2ds1G7EpEnONfb_/view?usp=sharing)
 
