@@ -8,12 +8,12 @@
 [![Framework](https://img.shields.io/badge/PyTorch-2.6-red.svg)](https://pytorch.org/)
 [![Dataset](https://img.shields.io/badge/Dataset-ITD_%26_WED-yellow)](https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali)
 
-**Yash Arora**, **S L P Yaswanth**, **Tanishq Maheshwari**, **Anupam Sobti**, **C. V. Jawahar**
+**Yash Arora**, **Aditya Arun**, **C. V. Jawahar**
 
 **International Institute of Information Technology, Hyderabad (IIIT-H)**
 
 **Abstract**
-*We present the **Indian Thali Dataset (ITD)** and **Weight Estimation Dataset (WED)**, targeting the complex challenge of segmenting and estimating the weight of Indian food items. Unlike western meals, Indian thalis allow items to touch and overlap, presenting unique segmentation challenges. We also introduce a novel multi-modal weight estimation network that fuses RGB and depth features to achieve state-of-the-art results.*
+*Automated dietary monitoring solutions face significant challenges when dealing with culturally diverse, multi-dish meals, where traditional single-item recognition approaches fail to capture the complexity of real-world eating patterns. Most existing computer vision systems are tailored to western foods and struggle with the overlapping textures, varied presentations, and cultural specificity of dishes like Indian Thalis, which contain 5–10 distinct food items per plate. We present Food Scanner, a novel, end-to-end pipeline with retraining-free segmentation & prototype-based classification, plus a lightweight trainable weight-regression head for automated nutrition estimation of multi-dish meals from a single image. Our approach requires no class-specific segmentation or classification retraining, enabling rapid adaptation to new dishes and cuisines. The pipeline integrates zero-shot segmentation, embedding-based prototype classification, a lightweight weight regression head, and nutrition computation to transform an Indian thali into per-dish calorie and macronutrient breakdowns. To enable this study, we contribute two datasets: a multi-view Indian Thali dataset of 796 plates (7,900 images) covering 50 dishes (with dense plate-level masks), and a weight estimation dataset of 267 plates (1,394 images) covering 41 dishes (with gram-level weight annotations). Systematic ablation studies show that our method achieves high accuracy while maintaining real-time performance. By combining zero-shot capabilities with a modular design, Food Scanner offers a scalable, culturally adaptable solution that can be deployed across diverse food environments without any additional training. The code will be available here.*
 
 [**Webpage**](https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali) | [**Paper**](https://drive.google.com/file/d/1UpYiVOng2okzTeanZ2ds1G7EpEnONfb_/view?usp=sharing)
 
@@ -138,9 +138,9 @@ If you find this code or dataset useful, please cite our paper:
 
 ```bibtex
 @inproceedings{arora2025indian,
-  title={Indian Thali: A Dataset and Benchmark for Food Segmentation and Weight Estimation},
-  author={Arora, Yash and Yaswanth, S L P and Maheshwari, Tanishq and Sobti, Anupam and Jawahar, C V},
-  booktitle={Proceedings of the Indian Conference on Computer Vision, Graphics and Image Processing (ICVGIP)},
+  title={What is there in an Indian Thali?},
+  author={Arora, Yash and Arun, Aditya and Jawahar, C V},
+  booktitle={Proceedings of the Indian Conference on Computer Vision, Graphics, and Image Processing (ICVGIP)},
   year={2025}
 }
 ```
