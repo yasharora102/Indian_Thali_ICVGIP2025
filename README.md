@@ -115,8 +115,7 @@ We provide pre-trained checkpoints for our best performing models.
 
 | Model | Task | Backbone | metrics | Link |
 | :--- | :--- | :--- | :--- | :--- |
-| **Mask2Former** | Segmentation | Swin-L | 58.2 mIoU | Coming Soon |
-| **WeightNet** | Weight Est. | ResNet-50 | N/A | Coming Soon |
+| **WeightNet** | Weight Est. | ResNet-50 | 14.51g (MAE) | Coming Soon |
 
 ---
 
