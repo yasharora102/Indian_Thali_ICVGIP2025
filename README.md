@@ -1,7 +1,7 @@
 
 <div align="center">
 
-# Indian Thali: A Dataset and Benchmark for Food Segmentation and Weight Estimation
+# What is there in an Indian Thali?
 
 [![Paper](https://img.shields.io/badge/Paper-ICVGIP_2025-green)](https://drive.google.com/file/d/1UpYiVOng2okzTeanZ2ds1G7EpEnONfb_/view?usp=sharing)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
